@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Image } from 'react-native';
 
 import api from '../../services/api';
@@ -32,7 +32,14 @@ const Favorites: React.FC = () => {
 
   useEffect(() => {
     async function loadFavorites(): Promise<void> {
-      // Load favorite foods from api
+      const response = await api.get('/favorites');
+
+      setFavorites(
+        response.data.map((food: Food) => ({
+          ...food,
+          formattedPrice: formatValue(food.price),
+        })),
+      );
     }
 
     loadFavorites();
